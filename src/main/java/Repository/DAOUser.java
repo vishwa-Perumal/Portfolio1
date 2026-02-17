@@ -9,6 +9,7 @@ public class DAOUser {
 	
 	public String getuserrole(String user_name,String user_password) throws SQLException, ClassNotFoundException {
 		 String role = null;
+		 DTOUsers dtouser;
 		 try {
 		        Class.forName("org.postgresql.Driver");
 		    	Connection connection = DataBase.getConnection();
@@ -17,8 +18,7 @@ public class DAOUser {
 				ps.setString(2, user_password);
 				ResultSet rs=ps.executeQuery();
 				if(rs.next()) {
-					 role = rs.getString("urole");
-					
+					 role = rs.getString("urole");				
 				}
 				return role;
 
@@ -26,7 +26,23 @@ public class DAOUser {
 		        throw new RuntimeException("PostgreSQL Driver not found", e);
 		    }
 	
+	}
+	
+	public void createguestuser(String name , String password) {
 		
+		try {
+		   Class.forName("org.postgresql.Driver");
+		   Connection connection=DataBase.getConnection();
+		   PreparedStatement ps =connection.prepareStatement("INSERT INTO table4 values(?,?,'guest')");
+		   ps.setString(1,name);
+		   ps.setString(2, password);
+		   int created=ps.executeUpdate();
+		   if(created<1) {
+			   System.out.println("guest user is added successfully");
+		   }
+		}catch(Exception e) {
+			System.out.println(e);
+		}
 		
 	}
 
